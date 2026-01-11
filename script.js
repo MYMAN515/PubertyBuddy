@@ -1182,7 +1182,7 @@ else if (slide.type === "strip") {
         if (index < slide.steps.length - 1) {
             const arrow = document.createElement('div');
             arrow.className = 'step-arrow';
-            arrow.innerHTML = '➔'; // You can also use an image or SVG here
+            arrow.setAttribute('aria-hidden', 'true');
             stripContainer.appendChild(arrow);
         }
     });
@@ -2930,4 +2930,3 @@ function getCorrectActivityLabels(activity) {
 function getOptionLabel(option) {
     return option.querySelector('p, .option-text, span, .label')?.textContent.trim();
 }
-

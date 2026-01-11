@@ -1376,29 +1376,34 @@ select:focus-visible,
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-start; /* Align to start to handle overflow better */
-    gap: 15px;
-    width: 95%;            /* Occupy almost full screen width */
-    max-width: 1400px;     /* Increased max width */
-    margin: 0 auto;        /* Center the whole container */
-    padding: 30px;
-    background: var(--bg-accent);   /* Optional: light background to see the area */
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    background: var(--bg-accent);
     border-radius: var(--radius-md);
-    overflow-x: auto;      /* Essential: allows swiping on smaller screens */
-    white-space: nowrap;   /* Keeps everything in one line */
+    box-shadow: var(--shadow-soft);
 }
 
 /* 2. Make the individual white boxes (cards) wider */
 .strip-step {
-    flex: 0 0 auto;        /* Prevents the boxes from shrinking */
-    width: 220px;          /* Wider white box to fit big images */
+    flex: 0 0 auto;
+    width: 150px;
+    min-height: 210px;
     background: var(--surface);
-    padding: 20px;
-    border-radius: var(--radius-sm);
+    padding: 18px 16px;
+    border-radius: var(--radius-md);
     box-shadow: var(--shadow-soft);
     text-align: center;
-    display: inline-block; /* Works with nowrap */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
     position: relative;
+    border: 2px solid rgba(210, 220, 234, 0.7);
 }
 
 .strip-step.is-clickable {
@@ -1449,16 +1454,16 @@ select:focus-visible,
 
 /* 3. Ensure images fill the wider box properly */
 .strip-step img {
-    width: 180px;          /* Larger image size */
-    height: 180px;
+    width: 120px;
+    height: 120px;
     object-fit: contain;
-    margin-bottom: 15px;
+    margin-bottom: 6px;
 }
 
 /* 4. Style the text inside the wider box */
 .strip-step-label {
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-size: 1rem;
+    font-weight: 700;
     color: var(--text);
     margin: 0;
 }
@@ -1470,6 +1475,52 @@ select:focus-visible,
     margin: 10px 0 0;
     line-height: 1.4;
     white-space: normal;
+}
+
+.step-arrow {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-arrow::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 12px;
+    top: 50%;
+    height: 8px;
+    background: var(--primary-strong);
+    border-radius: 999px;
+    transform: translateY(-50%);
+}
+
+.step-arrow::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-left: 14px solid var(--primary-strong);
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    transform: translateY(-50%);
+}
+
+@media (max-width: 900px) {
+    .hygiene-strip-container {
+        flex-direction: column;
+    }
+
+    .step-arrow {
+        transform: rotate(90deg);
+        margin: 4px 0;
+    }
 }
 
 .wash-face-modal {
