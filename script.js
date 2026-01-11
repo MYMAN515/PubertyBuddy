@@ -727,8 +727,8 @@ const content = {
                 quiz: {
                     question: "What does sleep give us?",
                     options: [
-                        { text: "Energy", icon: "🔋", correct: true },
-                        { text: "Video Games", icon: "🎮", correct: false }
+                        { text: "Energy", image: "images/happyboy.jpg", correct: true },
+                        { text: "No energy", image: "images/sadboy.jpg", correct: false }
                     ]
                 }
             },
