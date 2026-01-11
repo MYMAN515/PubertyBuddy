@@ -1151,6 +1151,7 @@ else if (slide.type === "strip") {
         // Create the step card
         const stepDiv = document.createElement('div');
         stepDiv.className = 'strip-step';
+        stepDiv.dataset.step = index + 1;
         stepDiv.innerHTML = `
             <img src="${step.image}" alt="${step.label}">
             <p class="strip-step-label">${translateText(step.label)}</p>
@@ -1177,14 +1178,6 @@ else if (slide.type === "strip") {
             });
         }
         stripContainer.appendChild(stepDiv);
-
-        // Add an arrow AFTER the step, but NOT after the last one
-        if (index < slide.steps.length - 1) {
-            const arrow = document.createElement('div');
-            arrow.className = 'step-arrow';
-            arrow.innerHTML = '➔'; // You can also use an image or SVG here
-            stripContainer.appendChild(arrow);
-        }
     });
 
     slideDiv.appendChild(stripContainer);
@@ -2930,4 +2923,3 @@ function getCorrectActivityLabels(activity) {
 function getOptionLabel(option) {
     return option.querySelector('p, .option-text, span, .label')?.textContent.trim();
 }
-
