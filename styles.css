@@ -1373,31 +1373,31 @@ select:focus-visible,
 /* Container adjustments to allow for bigger items */
 /* 1. Make the main container wider and allow scrolling if necessary */
 .hygiene-strip-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start; /* Align to start to handle overflow better */
-    gap: 15px;
-    width: 95%;            /* Occupy almost full screen width */
-    max-width: 1400px;     /* Increased max width */
-    margin: 0 auto;        /* Center the whole container */
-    padding: 30px;
-    background: var(--bg-accent);   /* Optional: light background to see the area */
+    display: grid;
+    grid-template-columns: repeat(5, minmax(160px, 1fr));
+    gap: 30px 60px;
+    align-items: start;
+    justify-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    background: var(--bg-accent);
     border-radius: var(--radius-md);
-    overflow-x: auto;      /* Essential: allows swiping on smaller screens */
-    white-space: nowrap;   /* Keeps everything in one line */
 }
 
 /* 2. Make the individual white boxes (cards) wider */
 .strip-step {
-    flex: 0 0 auto;        /* Prevents the boxes from shrinking */
-    width: 220px;          /* Wider white box to fit big images */
+    width: 100%;
+    max-width: 220px;
     background: var(--surface);
-    padding: 20px;
+    padding: 22px;
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-soft);
     text-align: center;
-    display: inline-block; /* Works with nowrap */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
 }
 
@@ -1449,8 +1449,9 @@ select:focus-visible,
 
 /* 3. Ensure images fill the wider box properly */
 .strip-step img {
-    width: 180px;          /* Larger image size */
-    height: 180px;
+    width: 100%;
+    max-width: 180px;
+    height: 160px;
     object-fit: contain;
     margin-bottom: 15px;
 }
@@ -1470,6 +1471,71 @@ select:focus-visible,
     margin: 10px 0 0;
     line-height: 1.4;
     white-space: normal;
+}
+
+.strip-step::after {
+    content: "➜";
+    position: absolute;
+    top: 50%;
+    right: -52px;
+    transform: translateY(-50%);
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--primary-strong);
+    text-shadow: 0 6px 12px rgba(29, 99, 214, 0.25);
+    pointer-events: none;
+}
+
+.strip-step[data-step="5"]::after {
+    content: none;
+}
+
+@media (max-width: 1100px) {
+    .hygiene-strip-container {
+        grid-template-columns: repeat(3, minmax(160px, 1fr));
+        gap: 36px 50px;
+    }
+
+    .strip-step[data-step="3"]::after {
+        content: "⬇";
+        top: auto;
+        bottom: -58px;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 40px;
+    }
+
+    .strip-step[data-step="4"]::after {
+        right: -48px;
+    }
+}
+
+@media (max-width: 820px) {
+    .hygiene-strip-container {
+        grid-template-columns: repeat(2, minmax(150px, 1fr));
+        gap: 40px 50px;
+    }
+
+    .strip-step[data-step="2"]::after,
+    .strip-step[data-step="4"]::after {
+        content: "⬇";
+        top: auto;
+        bottom: -58px;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 40px;
+    }
+
+    .strip-step[data-step="3"]::after {
+        content: "➜";
+        top: 50%;
+        right: -48px;
+        left: auto;
+        transform: translateY(-50%);
+        font-size: 42px;
+    }
 }
 
 .wash-face-modal {
