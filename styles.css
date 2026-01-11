@@ -1373,31 +1373,31 @@ select:focus-visible,
 /* Container adjustments to allow for bigger items */
 /* 1. Make the main container wider and allow scrolling if necessary */
 .hygiene-strip-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start; /* Align to start to handle overflow better */
-    gap: 15px;
-    width: 95%;            /* Occupy almost full screen width */
-    max-width: 1400px;     /* Increased max width */
-    margin: 0 auto;        /* Center the whole container */
-    padding: 30px;
-    background: var(--bg-accent);   /* Optional: light background to see the area */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    align-items: start;
+    justify-items: center;
+    gap: 36px 56px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px;
+    background: var(--bg-accent);
     border-radius: var(--radius-md);
-    overflow-x: auto;      /* Essential: allows swiping on smaller screens */
-    white-space: nowrap;   /* Keeps everything in one line */
 }
 
 /* 2. Make the individual white boxes (cards) wider */
 .strip-step {
-    flex: 0 0 auto;        /* Prevents the boxes from shrinking */
-    width: 220px;          /* Wider white box to fit big images */
+    width: 100%;
+    max-width: 220px;
     background: var(--surface);
     padding: 20px;
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-soft);
     text-align: center;
-    display: inline-block; /* Works with nowrap */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
 }
 
@@ -1449,8 +1449,8 @@ select:focus-visible,
 
 /* 3. Ensure images fill the wider box properly */
 .strip-step img {
-    width: 180px;          /* Larger image size */
-    height: 180px;
+    width: 170px;
+    height: 170px;
     object-fit: contain;
     margin-bottom: 15px;
 }
@@ -1470,6 +1470,29 @@ select:focus-visible,
     margin: 10px 0 0;
     line-height: 1.4;
     white-space: normal;
+}
+
+.strip-step.arrow-right::after,
+.strip-step.arrow-down::after {
+    position: absolute;
+    color: var(--primary-strong);
+    font-size: 24px;
+    font-weight: 700;
+    pointer-events: none;
+}
+
+.strip-step.arrow-right::after {
+    content: "➜";
+    right: -32px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.strip-step.arrow-down::after {
+    content: "↓";
+    left: 50%;
+    bottom: -32px;
+    transform: translateX(-50%);
 }
 
 .wash-face-modal {
