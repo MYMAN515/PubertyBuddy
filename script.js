@@ -19,6 +19,36 @@ let promptTimeout = null;
 let currentLanguage = 'en';
 let currentModalImages = null;
 let currentModalLabel = null;
+let activeStripContainer = null;
+
+function updateStripArrows(container) {
+    if (!container) return;
+    const steps = Array.from(container.querySelectorAll('.strip-step'));
+    steps.forEach(step => step.classList.remove('arrow-right', 'arrow-down'));
+    if (!steps.length) return;
+
+    const computed = window.getComputedStyle(container);
+    const columns = computed.gridTemplateColumns
+        .split(' ')
+        .filter(Boolean).length || 1;
+
+    steps.forEach((step, index) => {
+        if (index === steps.length - 1) return;
+        const isRowEnd = columns > 1 && (index + 1) % columns === 0;
+        step.classList.add(isRowEnd ? 'arrow-down' : 'arrow-right');
+    });
+}
+
+function setActiveStripContainer(container) {
+    activeStripContainer = container;
+    requestAnimationFrame(() => updateStripArrows(container));
+}
+
+window.addEventListener('resize', () => {
+    if (activeStripContainer) {
+        updateStripArrows(activeStripContainer);
+    }
+});
 
 const translations = {
     ms: {
@@ -1177,17 +1207,10 @@ else if (slide.type === "strip") {
             });
         }
         stripContainer.appendChild(stepDiv);
-
-        // Add an arrow AFTER the step, but NOT after the last one
-        if (index < slide.steps.length - 1) {
-            const arrow = document.createElement('div');
-            arrow.className = 'step-arrow';
-            arrow.innerHTML = '➔'; // You can also use an image or SVG here
-            stripContainer.appendChild(arrow);
-        }
     });
 
     slideDiv.appendChild(stripContainer);
+    setActiveStripContainer(stripContainer);
 }
 
 		// --- TYPE E: VIDEO SLIDE ---
@@ -2930,4 +2953,3 @@ function getCorrectActivityLabels(activity) {
 function getOptionLabel(option) {
     return option.querySelector('p, .option-text, span, .label')?.textContent.trim();
 }
-
