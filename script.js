@@ -69,6 +69,16 @@ const translations = {
         "When does a person have short legs?": "Bilakah seseorang mempunyai kaki yang pendek?",
         "Hygiene and Self-Care Routines": "Kebersihan dan Rutin Penjagaan Diri",
         "Daily Routine Builders": "Pembina Rutin Harian",
+        "Daily Routine Builder": "Pembina Rutin Harian",
+        "Arrange the steps in the order that feels right for your morning.": "Susun langkah-langkah mengikut urutan yang sesuai untuk pagi kamu.",
+        "Drag to reorder or use the arrows to move steps.": "Seret untuk menyusun semula atau guna anak panah untuk pindahkan langkah.",
+        "Reorder step": "Susun semula langkah",
+        "Move up": "Naikkan",
+        "Move down": "Turunkan",
+        "Delete step": "Padam langkah",
+        "Routine step card": "Kad langkah rutin",
+        "Step moved.": "Langkah telah dipindahkan.",
+        "Step removed.": "Langkah telah dipadamkan.",
         "Let's watch a video about daily routines!": "Jom tonton video tentang rutin harian!",
         "My Morning Hygiene Steps": "Langkah Kebersihan Pagi Saya",
         "Wake Up": "Bangun",
@@ -189,6 +199,16 @@ const translations = {
         "When does a person have short legs?": "人在什么时候还没长高？",
         "Hygiene and Self-Care Routines": "卫生与自我护理习惯",
         "Daily Routine Builders": "建立日常作息",
+        "Daily Routine Builder": "建立日常作息",
+        "Arrange the steps in the order that feels right for your morning.": "请把步骤按照你觉得适合的早晨顺序排列。",
+        "Drag to reorder or use the arrows to move steps.": "拖拽排序，或使用箭头移动步骤。",
+        "Reorder step": "重新排序步骤",
+        "Move up": "上移",
+        "Move down": "下移",
+        "Delete step": "删除步骤",
+        "Routine step card": "日常步骤卡片",
+        "Step moved.": "步骤已移动。",
+        "Step removed.": "步骤已删除。",
         "Let's watch a video about daily routines!": "一起来观看一个关于日常作息的视频！",
         "My Morning Hygiene Steps": "我的早晨作息",
         "Wake Up": "起床",
@@ -566,29 +586,36 @@ const content = {
                 ],
                 // ACTIVITY STAGE: One icon missing
                 activity: {
-					instruction: "Look! One step is missing.",
-					type: "sequence",
-					steps: [
-						{ image: "images/woman-waking-up_53876-40961.png", visible: true },
-						{ image: "https://media.giphy.com/media/YaY0FF0eUWLtVNK1Uw/giphy.gif", visible: true },
-						{ image: "", visible: false, placeholder: "❓" }, // The missing step
-						{ image: "https://www.telegraph.co.uk/content/dam/men/2017/06/30/TELEMMGLPICT000133447980_trans_NvBQzQNjv4BqdNLuJDSj-bduoIdVkVeVwdhwat7RjkF5CleLcJsFAQc.jpeg?imwidth=640", visible: true },
-						{ image: "https://globalsymbols.com/uploads/production/image/imagefile/8124/15_8124_b6261b9d-abb4-4bdb-b334-69d8ab3a8ff1.jpg", visible: true }
-					],
-					// ADD THIS CHOICES ARRAY:
-					choices: [
-						{ 
-							text: "Wash Face", 
-							image: "https://media1.giphy.com/media/Ri8FpKsdTwiaUFWysZ/giphy.gif", 
-							correct: true 
-						},
-						{ 
-							text: "Play Toys", 
-							image: "https://todaysparent.mblycdn.com/tp/resized/2017/11/1600x1200/how-many-toys-do-kids-really-need-1280x960.jpg", 
-							correct: false 
-						}
-					]
-				}
+                    instruction: "Daily Routine Builder",
+                    type: "routineBuilder",
+                    steps: [
+                        {
+                            id: "wake-up",
+                            step: "Wake Up",
+                            image: "https://img.freepik.com/premium-photo/asian-man-waking-up-morning-sitting-bed-stretching_126277-1356.jpg"
+                        },
+                        {
+                            id: "brush-teeth",
+                            step: "Brush Teeth",
+                            image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDg1djlmZ2Zna213dGd6amEwNHJjdHNoNWZlcTJ4bTF1Y203c3cxOCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/YaY0FF0eUWLtVNK1Uw/giphy.gif"
+                        },
+                        {
+                            id: "wash-face",
+                            step: "Wash Face",
+                            image: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGJqbDBocDk2NWs1eGNueGNrcW13M2cxYXE5M3MzcThkcmc4bWY2OCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ri8FpKsdTwiaUFWysZ/giphy.gif"
+                        },
+                        {
+                            id: "wear-deodorant",
+                            step: "Wear Deodorant",
+                            image: "https://www.telegraph.co.uk/content/dam/men/2017/06/30/TELEMMGLPICT000133447980_trans_NvBQzQNjv4BqdNLuJDSj-bduoIdVkVeVwdhwat7RjkF5CleLcJsFAQc.jpeg?imwidth=640"
+                        },
+                        {
+                            id: "change-clothes",
+                            step: "Change Clean Clothes",
+                            image: "https://globalsymbols.com/uploads/production/image/imagefile/8124/15_8124_b6261b9d-abb4-4bdb-b334-69d8ab3a8ff1.jpg"
+                        }
+                    ]
+                }
             },
 
 			// Inside submodule2 -> topics[1] (Shower Kit Essentials)
@@ -1574,32 +1601,175 @@ function renderTimeline(activity, container) {
 }
 
 function renderRoutineBuilder(activity, container) {
-    const stepsDiv = document.createElement('div');
-    stepsDiv.className = 'routine-steps';
-    
-    activity.steps.forEach(step => {
-        const stepDiv = document.createElement('div');
-        stepDiv.className = 'routine-step';
-        
-        const icon = document.createElement('div');
-        icon.className = 'routine-step-icon';
-        icon.textContent = step.icon;
-        
-        const label = document.createElement('div');
-        label.className = 'routine-step-label';
-        label.textContent = translateText(step.step);
-        
-        stepDiv.appendChild(icon);
-        stepDiv.appendChild(label);
-        stepsDiv.appendChild(stepDiv);
-    });
-    
-    container.appendChild(stepsDiv);
-    
-    // Auto-complete after viewing
-    setTimeout(() => {
-        showSuccessFeedback();
-    }, 2000);
+    const routineBuilder = document.createElement('div');
+    routineBuilder.className = 'routine-builder';
+
+    const header = document.createElement('div');
+    header.className = 'routine-builder-header';
+    header.innerHTML = `
+        <p class="routine-builder-title">${translateText("Arrange the steps in the order that feels right for your morning.")}</p>
+        <p class="routine-builder-subtitle">${translateText("Drag to reorder or use the arrows to move steps.")}</p>
+    `;
+
+    const liveRegion = document.createElement('p');
+    liveRegion.className = 'sr-only';
+    liveRegion.setAttribute('aria-live', 'polite');
+
+    const steps = (activity.steps || []).map((step, index) => ({
+        id: step.id || `routine-step-${index}`,
+        step: step.step,
+        image: step.image
+    }));
+
+    const grid = document.createElement('div');
+    grid.className = 'routine-grid';
+    grid.setAttribute('role', 'list');
+
+    let draggedId = null;
+
+    const announce = (message) => {
+        liveRegion.textContent = message;
+    };
+
+    const moveStep = (fromIndex, toIndex) => {
+        if (fromIndex === toIndex || toIndex < 0 || toIndex >= steps.length) {
+            return;
+        }
+        const [moved] = steps.splice(fromIndex, 1);
+        steps.splice(toIndex, 0, moved);
+        renderSteps();
+        announce(`${translateText(moved.step)} ${translateText("Step moved.")}`);
+    };
+
+    const removeStep = (stepId) => {
+        const index = steps.findIndex((step) => step.id === stepId);
+        if (index === -1) {
+            return;
+        }
+        const [removed] = steps.splice(index, 1);
+        renderSteps();
+        announce(`${translateText(removed.step)} ${translateText("Step removed.")}`);
+    };
+
+    const renderSteps = () => {
+        grid.innerHTML = '';
+        steps.forEach((step, index) => {
+            const card = document.createElement('article');
+            card.className = 'routine-card';
+            card.setAttribute('role', 'listitem');
+            card.setAttribute('draggable', 'true');
+            card.dataset.stepId = step.id;
+            card.setAttribute(
+                'aria-label',
+                `${translateText("Routine step card")}: ${translateText(step.step)}`
+            );
+
+            const media = document.createElement('div');
+            media.className = 'routine-card-media';
+
+            const image = document.createElement('img');
+            image.src = step.image;
+            image.alt = translateText(step.step);
+            image.loading = 'lazy';
+            media.appendChild(image);
+
+            const info = document.createElement('div');
+            info.className = 'routine-card-info';
+
+            const label = document.createElement('h3');
+            label.className = 'routine-card-label';
+            label.textContent = translateText(step.step);
+
+            const actions = document.createElement('div');
+            actions.className = 'routine-card-actions';
+
+            const dragHandle = document.createElement('button');
+            dragHandle.type = 'button';
+            dragHandle.className = 'routine-action routine-drag-handle';
+            dragHandle.setAttribute('aria-label', translateText("Reorder step"));
+            dragHandle.innerHTML = '<span aria-hidden="true">⠿</span>';
+
+            const moveUp = document.createElement('button');
+            moveUp.type = 'button';
+            moveUp.className = 'routine-action';
+            moveUp.setAttribute('aria-label', translateText("Move up"));
+            moveUp.innerHTML = '<span aria-hidden="true">↑</span>';
+            moveUp.disabled = index === 0;
+            moveUp.addEventListener('click', () => moveStep(index, index - 1));
+
+            const moveDown = document.createElement('button');
+            moveDown.type = 'button';
+            moveDown.className = 'routine-action';
+            moveDown.setAttribute('aria-label', translateText("Move down"));
+            moveDown.innerHTML = '<span aria-hidden="true">↓</span>';
+            moveDown.disabled = index === steps.length - 1;
+            moveDown.addEventListener('click', () => moveStep(index, index + 1));
+
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'routine-action routine-remove';
+            removeButton.setAttribute('aria-label', translateText("Delete step"));
+            removeButton.innerHTML = '<span aria-hidden="true">✕</span>';
+            removeButton.addEventListener('click', () => removeStep(step.id));
+
+            actions.appendChild(dragHandle);
+            actions.appendChild(moveUp);
+            actions.appendChild(moveDown);
+            actions.appendChild(removeButton);
+
+            info.appendChild(label);
+            info.appendChild(actions);
+
+            card.appendChild(media);
+            card.appendChild(info);
+
+            card.addEventListener('dragstart', (event) => {
+                draggedId = step.id;
+                card.classList.add('is-dragging');
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData('text/plain', step.id);
+            });
+
+            card.addEventListener('dragend', () => {
+                card.classList.remove('is-dragging');
+                draggedId = null;
+                grid.querySelectorAll('.is-drop-target').forEach((target) => {
+                    target.classList.remove('is-drop-target');
+                });
+            });
+
+            card.addEventListener('dragover', (event) => {
+                event.preventDefault();
+                if (draggedId && draggedId !== step.id) {
+                    card.classList.add('is-drop-target');
+                }
+            });
+
+            card.addEventListener('dragleave', () => {
+                card.classList.remove('is-drop-target');
+            });
+
+            card.addEventListener('drop', (event) => {
+                event.preventDefault();
+                const sourceId = event.dataTransfer.getData('text/plain') || draggedId;
+                if (!sourceId || sourceId === step.id) {
+                    return;
+                }
+                const fromIndex = steps.findIndex((item) => item.id === sourceId);
+                const toIndex = steps.findIndex((item) => item.id === step.id);
+                moveStep(fromIndex, toIndex);
+            });
+
+            grid.appendChild(card);
+        });
+    };
+
+    routineBuilder.appendChild(header);
+    routineBuilder.appendChild(grid);
+    routineBuilder.appendChild(liveRegion);
+    container.appendChild(routineBuilder);
+
+    renderSteps();
 }
 
 function renderSelectCorrect(activity, container) {
@@ -2930,4 +3100,3 @@ function getCorrectActivityLabels(activity) {
 function getOptionLabel(option) {
     return option.querySelector('p, .option-text, span, .label')?.textContent.trim();
 }
-
