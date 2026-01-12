@@ -555,7 +555,7 @@ const content = {
                                 }
                             },
                             {
-                                image: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGJqbDBocDk2NWs1eGNueGNrcW13M2cxYXE5M3MzcThkcmc4bWY2OCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ri8FpKsdTwiaUFWysZ/giphy.gif",
+                                image: "https://i.pinimg.com/originals/4e/a5/df/4ea5df9cee256e62f30666cb2274fcc8.gif",
                                 label: "Take a Bath",
                                 modalImages: {
                                     en: "images/bte.jpg",
