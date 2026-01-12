@@ -75,6 +75,7 @@ const translations = {
         "Brush Teeth": "Gosok Gigi",
         "Wash Face": "Basuh Muka",
         "Wear Deodorant": "Guna deodoran",
+        "Take a Bath": "Mandi",
         "Change Clean Clothes": "Tukar Pakaian Bersih",
         "Look! One step is missing.": "Tengok! Satu langkah hilang.",
         "Play Toys": "Main Permainan",
@@ -195,6 +196,7 @@ const translations = {
         "Brush Teeth": "刷牙",
         "Wash Face": "洗脸",
         "Wear Deodorant": "使用止汗剂",
+        "Take a Bath": "洗澡",
         "Change Clean Clothes": "更换干净衣服",
         "Look! One step is missing.": "看！少了一个步骤。",
         "Play Toys": "玩玩具",
@@ -541,6 +543,15 @@ const content = {
                                     en: "images/eimg.jpg",
                                     ms: "images/mimg.jpg",
                                     zh: "images/cimg.jpg"
+                                }
+                            },
+                            {
+                                image: "https://i.pinimg.com/originals/4e/a5/df/4ea5df9cee256e62f30666cb2274fcc8.gif",
+                                label: "Take a Bath",
+                                modalImages: {
+                                    en: "images/bte.jpg",
+                                    ms: "images/btm.jpg",
+                                    zh: "images/btz.jpg"
                                 }
                             },
                             {
