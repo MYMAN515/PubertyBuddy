@@ -564,15 +564,6 @@ const content = {
                                 }
                             },
                             {
-                                image: "https://i.pinimg.com/originals/4e/a5/df/4ea5df9cee256e62f30666cb2274fcc8.gif",
-                                label: "Take a Bath",
-                                modalImages: {
-                                    en: "images/bte.jpg",
-                                    ms: "images/btm.jpg",
-                                    zh: "images/btz.jpg"
-                                }
-                            },
-                            {
                                 image: "https://globalsymbols.com/uploads/production/image/imagefile/8124/15_8124_b6261b9d-abb4-4bdb-b334-69d8ab3a8ff1.jpg",
                                 label: "Change Clean Clothes",
                                 modalImages: {
