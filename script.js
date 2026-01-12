@@ -546,6 +546,15 @@ const content = {
                                 }
                             },
                             {
+                                image: "https://i.pinimg.com/originals/4e/a5/df/4ea5df9cee256e62f30666cb2274fcc8.gif",
+                                label: "Take a Bath",
+                                modalImages: {
+                                    en: "images/bte.jpg",
+                                    ms: "images/btm.jpg",
+                                    zh: "images/btz.jpg"
+                                }
+                            },
+                            {
                                 image: "https://www.telegraph.co.uk/content/dam/men/2017/06/30/TELEMMGLPICT000133447980_trans_NvBQzQNjv4BqdNLuJDSj-bduoIdVkVeVwdhwat7RjkF5CleLcJsFAQc.jpeg?imwidth=640",
                                 label: "Wear Deodorant",
                                 modalImages: {
