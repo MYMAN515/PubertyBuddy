@@ -22,6 +22,7 @@ let currentModalLabel = null;
 
 const translations = {
     ms: {
+        "Coming of Wet Dream": "Kemunculan Mimpi Basah",
         "Language": "Bahasa",
         "Welcome to Puberty Buddy!": "Selamat datang ke Puberty Buddy!",
         "Physical and Emotional Changes": "Perubahan Fizikal dan Emosi",
@@ -143,6 +144,7 @@ const translations = {
         "Back": "Kembali"
     },
     zh: {
+        "Coming of Wet Dream": "出现梦遗",
         "Language": "语言",
         "Welcome to Puberty Buddy!": "欢迎来到 Puberty Buddy！",
         "Physical and Emotional Changes": "身体与情绪变化",
@@ -341,6 +343,88 @@ function closeWashFaceModal() {
 }
 
 // ==========================================
+// WET DREAM OVERLAY FUNCTIONS
+// ==========================================
+function showWetDreamOverlay(revealImages) {
+    // Get the appropriate image based on current language
+    const imageSrc = revealImages[currentLanguage] || revealImages.en || Object.values(revealImages)[0];
+    
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'wetDreamOverlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    `;
+    
+    // Create image container
+    const imgContainer = document.createElement('div');
+    imgContainer.style.cssText = `
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+    `;
+    
+    // Create image
+    const img = document.createElement('img');
+    img.src = imageSrc;
+    img.style.cssText = `
+        max-width: 100%;
+        max-height: 85vh;
+        border-radius: 15px;
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+    `;
+    img.onclick = (e) => e.stopPropagation(); // Prevent closing when clicking on image
+    
+    imgContainer.appendChild(img);
+    overlay.appendChild(imgContainer);
+    document.body.appendChild(overlay);
+    
+    // Click anywhere outside image to make it transparent and remove
+    overlay.onclick = () => {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            if (overlay.parentNode) {
+                overlay.parentNode.removeChild(overlay);
+            }
+        }, 300);
+    };
+}
+
+// Add CSS for glow animation dynamically
+(function addWetDreamStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes glowPulse {
+            0%, 100% {
+                box-shadow: 0 0 20px #4ade80, 0 0 40px #22c55e, 0 0 60px #4ade80;
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                box-shadow: 0 0 30px #4ade80, 0 0 60px #22c55e, 0 0 90px #4ade80;
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+        
+        .wet-dream-glow-btn:hover {
+            box-shadow: 0 0 40px #4ade80, 0 0 80px #22c55e, 0 0 120px #4ade80 !important;
+            transform: translateX(-50%) scale(1.15) !important;
+        }
+    `;
+    document.head.appendChild(style);
+})();
+
+// ==========================================
 // CONTENT DATA
 // ==========================================
 const content = {
@@ -387,7 +471,10 @@ const content = {
 						}, 
 					},
 					{
-						image: {
+						type: "wetDreamSlide",
+						text: "Coming of Wet Dream",
+						image: "images/wetdream.png",
+						revealImages: {
 							en: "images/oo1.jpg",
 							ms: "images/oo2.jpg",
 							zh: "images/oo3.jpg"
@@ -1161,6 +1248,19 @@ function showTeachContent() {
 else if (slide.type === "strip") {
     const stripContainer = document.createElement('div');
     stripContainer.className = 'hygiene-strip-container';
+    // Force single row layout with horizontal scrolling if needed
+    stripContainer.style.cssText = `
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 20px 10px;
+        width: 100%;
+        max-width: 100%;
+    `;
 
     slide.steps.forEach((step, index) => {
         const detailText = Array.isArray(step.details)
@@ -1169,6 +1269,8 @@ else if (slide.type === "strip") {
         // Create the step card
         const stepDiv = document.createElement('div');
         stepDiv.className = 'strip-step';
+        // Prevent shrinking to keep all items in one row
+        stepDiv.style.cssText = 'flex-shrink: 0; min-width: 100px;';
         stepDiv.innerHTML = `
             <img src="${step.image}" alt="${step.label}">
             <p class="strip-step-label">${translateText(step.label)}</p>
@@ -1200,6 +1302,7 @@ else if (slide.type === "strip") {
         if (index < slide.steps.length - 1) {
             const arrow = document.createElement('div');
             arrow.className = 'step-arrow';
+            arrow.style.cssText = 'flex-shrink: 0;';
             arrow.setAttribute('aria-hidden', 'true');
             stripContainer.appendChild(arrow);
         }
@@ -1229,6 +1332,61 @@ else if (slide.type === "video") {
     `;
     slideDiv.appendChild(videoContainer);
 }
+
+        // --- TYPE F: WET DREAM SLIDE ---
+        else if (slide.type === "wetDreamSlide") {
+            const wetDreamContainer = document.createElement('div');
+            wetDreamContainer.className = 'wet-dream-container';
+            wetDreamContainer.style.cssText = 'display: flex; flex-direction: column; align-items: center; text-align: center; position: relative;';
+
+            // Title above the image
+            const title = document.createElement('h2');
+            title.className = 'wet-dream-title';
+            title.textContent = translateText(slide.text);
+            title.style.cssText = 'font-size: 28px; color: #4a90d9; margin-bottom: 20px; font-weight: bold;';
+            wetDreamContainer.appendChild(title);
+
+            // Image wrapper for positioning the button
+            const imageWrapper = document.createElement('div');
+            imageWrapper.style.cssText = 'position: relative; display: inline-block;';
+
+            // Main image
+            const img = document.createElement('img');
+            img.src = slide.image;
+            img.className = 'teach-image wet-dream-image';
+            img.style.cssText = 'max-width: 100%; border-radius: 15px;';
+            imageWrapper.appendChild(img);
+
+            // Green glowing button at bottom center
+            const glowBtn = document.createElement('button');
+            glowBtn.className = 'wet-dream-glow-btn';
+            glowBtn.textContent = '👆';
+            glowBtn.style.cssText = `
+                position: absolute;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(145deg, #4ade80, #22c55e);
+                border: none;
+                border-radius: 50%;
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+                cursor: pointer;
+                box-shadow: 0 0 20px #4ade80, 0 0 40px #22c55e, 0 0 60px #4ade80;
+                animation: glowPulse 1.5s ease-in-out infinite;
+            `;
+            imageWrapper.appendChild(glowBtn);
+
+            wetDreamContainer.appendChild(imageWrapper);
+            slideDiv.appendChild(wetDreamContainer);
+
+            // Click handler for the glowing button
+            glowBtn.onclick = (e) => {
+                e.stopPropagation();
+                showWetDreamOverlay(slide.revealImages);
+            };
+        }
 
         // --- TYPE D: STANDARD SLIDE (GENDER LOGIC HERE) ---
         else {
