@@ -1755,7 +1755,7 @@ function renderRoutineBuilder(activity, container) {
     
     activity.steps.forEach(step => {
         const stepDiv = document.createElement('div');
-        stepDiv.className = 'routine-step';
+        stepDiv.className = 'routine-step-card';
         
         const icon = document.createElement('div');
         icon.className = 'routine-step-icon';
