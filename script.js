@@ -671,29 +671,31 @@ const content = {
                 ],
                 // ACTIVITY STAGE: One icon missing
                 activity: {
-					instruction: "Look! One step is missing.",
-					type: "sequence",
-					steps: [
-						{ image: "images/woman-waking-up_53876-40961.png", visible: true },
-						{ image: "https://media.giphy.com/media/YaY0FF0eUWLtVNK1Uw/giphy.gif", visible: true },
-						{ image: "", visible: false, placeholder: "❓" }, // The missing step
-						{ image: "https://www.telegraph.co.uk/content/dam/men/2017/06/30/TELEMMGLPICT000133447980_trans_NvBQzQNjv4BqdNLuJDSj-bduoIdVkVeVwdhwat7RjkF5CleLcJsFAQc.jpeg?imwidth=640", visible: true },
-						{ image: "https://globalsymbols.com/uploads/production/image/imagefile/8124/15_8124_b6261b9d-abb4-4bdb-b334-69d8ab3a8ff1.jpg", visible: true }
-					],
-					// ADD THIS CHOICES ARRAY:
-					choices: [
-						{ 
-							text: "Wash Face", 
-							image: "https://media1.giphy.com/media/Ri8FpKsdTwiaUFWysZ/giphy.gif", 
-							correct: true 
-						},
-						{ 
-							text: "Play Toys", 
-							image: "https://todaysparent.mblycdn.com/tp/resized/2017/11/1600x1200/how-many-toys-do-kids-really-need-1280x960.jpg", 
-							correct: false 
-						}
-					]
-				}
+                    instruction: "Build your morning routine. Drag cards to reorder, or use the buttons to move or delete steps.",
+                    type: "routineBuilder",
+                    steps: [
+                        {
+                            step: "Wake Up",
+                            image: "https://img.freepik.com/premium-photo/asian-man-waking-up-morning-sitting-bed-stretching_126277-1356.jpg"
+                        },
+                        {
+                            step: "Brush Teeth",
+                            image: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDg1djlmZ2Zna213dGd6amEwNHJjdHNoNWZlcTJ4bTF1Y203c3cxOCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/YaY0FF0eUWLtVNK1Uw/giphy.gif"
+                        },
+                        {
+                            step: "Wash Face",
+                            image: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGJqbDBocDk2NWs1eGNueGNrcW13M2cxYXE5M3MzcThkcmc4bWY2OCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ri8FpKsdTwiaUFWysZ/giphy.gif"
+                        },
+                        {
+                            step: "Wear Deodorant",
+                            image: "https://www.telegraph.co.uk/content/dam/men/2017/06/30/TELEMMGLPICT000133447980_trans_NvBQzQNjv4BqdNLuJDSj-bduoIdVkVeVwdhwat7RjkF5CleLcJsFAQc.jpeg?imwidth=640"
+                        },
+                        {
+                            step: "Change Clean Clothes",
+                            image: "https://globalsymbols.com/uploads/production/image/imagefile/8124/15_8124_b6261b9d-abb4-4bdb-b334-69d8ab3a8ff1.jpg"
+                        }
+                    ]
+                }
             },
 
 			// Inside submodule2 -> topics[1] (Shower Kit Essentials)
@@ -1750,32 +1752,181 @@ function renderTimeline(activity, container) {
 }
 
 function renderRoutineBuilder(activity, container) {
-    const stepsDiv = document.createElement('div');
-    stepsDiv.className = 'routine-steps';
-    
-    activity.steps.forEach(step => {
-        const stepDiv = document.createElement('div');
-        stepDiv.className = 'routine-step';
-        
-        const icon = document.createElement('div');
-        icon.className = 'routine-step-icon';
-        icon.textContent = step.icon;
-        
-        const label = document.createElement('div');
-        label.className = 'routine-step-label';
-        label.textContent = translateText(step.step);
-        
-        stepDiv.appendChild(icon);
-        stepDiv.appendChild(label);
-        stepsDiv.appendChild(stepDiv);
-    });
-    
-    container.appendChild(stepsDiv);
-    
-    // Auto-complete after viewing
-    setTimeout(() => {
-        showSuccessFeedback();
-    }, 2000);
+    const wrapper = document.createElement('div');
+    wrapper.className = 'routine-builder';
+
+    const header = document.createElement('div');
+    header.className = 'routine-header';
+
+    const title = document.createElement('h3');
+    title.className = 'section-title';
+    title.textContent = translateText("My Routine Steps");
+
+    const subtitle = document.createElement('p');
+    subtitle.textContent = translateText("Drag and drop the cards or use the buttons to reorder.");
+
+    header.appendChild(title);
+    header.appendChild(subtitle);
+    wrapper.appendChild(header);
+
+    const status = document.createElement('div');
+    status.className = 'sr-only';
+    status.setAttribute('aria-live', 'polite');
+    wrapper.appendChild(status);
+
+    const grid = document.createElement('div');
+    grid.className = 'routine-grid';
+    grid.setAttribute('role', 'list');
+
+    const steps = activity.steps.map((step, index) => ({
+        ...step,
+        id: `${index}-${step.step}`
+    }));
+
+    let draggedId = null;
+
+    const announce = (message) => {
+        status.textContent = message;
+    };
+
+    const moveStep = (fromIndex, toIndex) => {
+        if (toIndex < 0 || toIndex >= steps.length) return;
+        const [moved] = steps.splice(fromIndex, 1);
+        steps.splice(toIndex, 0, moved);
+        renderCards();
+        announce(translateText("Routine order updated."));
+    };
+
+    const removeStep = (index) => {
+        steps.splice(index, 1);
+        renderCards();
+        announce(translateText("Step removed."));
+    };
+
+    const handleDragStart = (event) => {
+        const card = event.currentTarget;
+        draggedId = card.dataset.stepId;
+        card.classList.add('dragging');
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', draggedId);
+    };
+
+    const handleDragEnd = (event) => {
+        event.currentTarget.classList.remove('dragging');
+        grid.querySelectorAll('.routine-card').forEach(card => card.classList.remove('drag-over'));
+    };
+
+    const handleDragOver = (event) => {
+        event.preventDefault();
+        const card = event.currentTarget;
+        if (!card.classList.contains('drag-over')) {
+            card.classList.add('drag-over');
+        }
+        event.dataTransfer.dropEffect = 'move';
+    };
+
+    const handleDragLeave = (event) => {
+        event.currentTarget.classList.remove('drag-over');
+    };
+
+    const handleDrop = (event) => {
+        event.preventDefault();
+        const card = event.currentTarget;
+        card.classList.remove('drag-over');
+        const targetId = card.dataset.stepId;
+        if (!draggedId || draggedId === targetId) return;
+        const fromIndex = steps.findIndex(step => step.id === draggedId);
+        const toIndex = steps.findIndex(step => step.id === targetId);
+        moveStep(fromIndex, toIndex);
+    };
+
+    const renderCards = () => {
+        grid.innerHTML = '';
+
+        steps.forEach((step, index) => {
+            const card = document.createElement('div');
+            card.className = 'routine-card';
+            card.setAttribute('role', 'listitem');
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('draggable', 'true');
+            card.dataset.stepId = step.id;
+
+            const media = document.createElement('div');
+            media.className = 'routine-card-image';
+
+            if (step.image) {
+                const img = document.createElement('img');
+                img.src = step.image;
+                img.alt = translateText(step.step);
+                media.appendChild(img);
+            } else {
+                const icon = document.createElement('div');
+                icon.className = 'routine-card-icon';
+                icon.textContent = step.icon || '✨';
+                media.appendChild(icon);
+            }
+
+            const label = document.createElement('div');
+            label.className = 'routine-card-label';
+            label.textContent = translateText(step.step);
+
+            const actions = document.createElement('div');
+            actions.className = 'routine-card-actions';
+
+            const hint = document.createElement('span');
+            hint.className = 'routine-drag-hint';
+            hint.textContent = translateText("Drag to reorder");
+
+            const actionGroup = document.createElement('div');
+            actionGroup.className = 'routine-action-group';
+
+            const moveUpBtn = document.createElement('button');
+            moveUpBtn.type = 'button';
+            moveUpBtn.className = 'routine-action-btn';
+            moveUpBtn.setAttribute('aria-label', translateText("Move step up"));
+            moveUpBtn.innerHTML = '⬆️<span class="sr-only">Move up</span>';
+            moveUpBtn.addEventListener('click', () => moveStep(index, index - 1));
+
+            const moveDownBtn = document.createElement('button');
+            moveDownBtn.type = 'button';
+            moveDownBtn.className = 'routine-action-btn';
+            moveDownBtn.setAttribute('aria-label', translateText("Move step down"));
+            moveDownBtn.innerHTML = '⬇️<span class="sr-only">Move down</span>';
+            moveDownBtn.addEventListener('click', () => moveStep(index, index + 1));
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
+            deleteBtn.className = 'routine-action-btn delete';
+            deleteBtn.setAttribute('aria-label', translateText("Delete step"));
+            deleteBtn.innerHTML = '🗑️<span class="sr-only">Delete step</span>';
+            deleteBtn.addEventListener('click', () => removeStep(index));
+
+            actionGroup.appendChild(moveUpBtn);
+            actionGroup.appendChild(moveDownBtn);
+            actionGroup.appendChild(deleteBtn);
+
+            actions.appendChild(hint);
+            actions.appendChild(actionGroup);
+
+            card.appendChild(media);
+            card.appendChild(label);
+            card.appendChild(actions);
+
+            card.addEventListener('dragstart', handleDragStart);
+            card.addEventListener('dragend', handleDragEnd);
+            card.addEventListener('dragover', handleDragOver);
+            card.addEventListener('dragleave', handleDragLeave);
+            card.addEventListener('drop', handleDrop);
+
+            grid.appendChild(card);
+        });
+
+    };
+
+    renderCards();
+    wrapper.appendChild(grid);
+    container.appendChild(wrapper);
+    document.getElementById('activityNextBtn').classList.remove('hidden');
 }
 
 function renderSelectCorrect(activity, container) {
